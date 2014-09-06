@@ -1,0 +1,18 @@
+{
+	"name": "insolita/yii2-things",
+	"description": "just different little things",
+	"type": "yii2-extension",
+	"keywords": ["yii2","extension"],
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "insolita",
+			"email": "donnainsolita@gmail.com"
+		}
+	],
+	"autoload": {
+		"psr-4": {
+			"insolita\\things\\": ""
+		}
+	}
+}
