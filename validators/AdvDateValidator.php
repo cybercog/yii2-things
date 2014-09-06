@@ -9,6 +9,8 @@
 namespace insolita\things\validators;
 
 
+use Codeception\Util\Debug;
+use insolita\helpers\Helper;
 use yii\validators\DateValidator;
 
 class AdvDateValidator extends DateValidator{
@@ -35,10 +37,19 @@ class AdvDateValidator extends DateValidator{
         $result = $this->validateValue($value);
         if (!empty($result)) {
             $this->addError($object, $attribute, $result[0], $result[1]);
-        } elseif ($this->timestampAttribute !== null) {
-            $format=is_array($this->format)?$this->format[0]:$this->format;
-            $date = \DateTime::createFromFormat($format, $value);
-            $object->{$this->timestampAttribute} = $date->getTimestamp();
+        } elseif ($this->timestampAttribute !== null && !empty($this->format)) {
+            if(!is_array($this->format)){
+                $date = \DateTime::createFromFormat($this->format, $value);
+                if($date){
+                    $object->{$this->timestampAttribute} = $date->getTimestamp();
+                }
+            }elseif(isset($this->format[0])){
+                $date = \DateTime::createFromFormat($this->format[0], $value);
+                if($date){
+                    $object->{$this->timestampAttribute} = $date->getTimestamp();
+                }
+            }
+
         }
     }
 

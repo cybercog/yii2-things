@@ -23,11 +23,18 @@ to the require section of your `composer.json` file.
 
 AdvDateValidator - Extends for DateValidator
 ===================================
-Allow set allowed formats as array instead of string - and return true if the validly of one of the formats
+Allow to set formats as array instead of string - and return true if the validly of one of the formats
 
 Usage
 -----
-Just define class '\insolita\things\components\NotraceFileTarget'  for needed target, other options inherit from FileTarget
+public function rules()
+    {
+        return [
+        //...
+            ['somedate',AdvDateValidator::className(),'format'=>['Y-m-d H:i:s','Y-m-d','Y-m']]
+        //...
+        ];
+    }
 
 NotraceFileTarget - Extends for FileTarget
 ===================================
