@@ -23,7 +23,7 @@ to the require section of your `composer.json` file.
 
 AdvDateValidator - Extends for DateValidator
 ===================================
-Allow to set formats as array instead of string - and return true if the validly of one of the formats
+Allow to set formats as array, not only string - and return true if the validly of one of the formats, Default string validation worked too
 
 Usage
 -----
@@ -31,7 +31,7 @@ public function rules()
     {
         return [
         //...
-            ['somedate',AdvDateValidator::className(),'format'=>['Y-m-d H:i:s','Y-m-d','Y-m']]
+            ['somedate',AdvDateValidator::className(),'format'=>['Y-m-d H:i:s','Y-m-d','Y-m']],
         //...
         ];
     }
