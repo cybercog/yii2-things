@@ -27,6 +27,7 @@ Allow to set formats as array, not only string - and return true if the validly 
 
 Usage
 -----
+```php
 public function rules()
     {
         return [
@@ -35,6 +36,7 @@ public function rules()
         //...
         ];
     }
+    ```
 
 NotraceFileTarget - Extends for FileTarget
 ===================================
