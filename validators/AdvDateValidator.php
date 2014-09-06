@@ -53,7 +53,7 @@ class AdvDateValidator extends DateValidator{
         if(is_array($this->format)){
             $valid=false;
             foreach($this->format as $format){
-                $date = \DateTime::createFromFormat($this->format, $value);
+                $date = \DateTime::createFromFormat($format, $value);
                 $errors = \DateTime::getLastErrors();
                 $invalid = $date === false || $errors['error_count'] || $errors['warning_count'];
                 if(!$invalid){
