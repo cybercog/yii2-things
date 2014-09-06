@@ -21,6 +21,21 @@ or add
 
 to the require section of your `composer.json` file.
 
+AdvDateValidator - Extends for DateValidator
+===================================
+Allow set allowed formats as array instead of string - and return true if the validly of one of the formats
+
+Usage
+-----
+Just define class '\insolita\things\components\NotraceFileTarget'  for needed target, other options inherit from FileTarget
+
+NotraceFileTarget - Extends for FileTarget
+===================================
+Not log any trace for current target, ignore general trace level (because trace level sets globally for logging);
+Usage
+-----
+Just define class '\insolita\things\components\NotraceFileTarget'  for needed target, other options inherit from FileTarget
+
 DirectCache - Extends for FileCache
 ===================================
 Add some additional methods for access to cache with direct setting keyprefix and cachePath
