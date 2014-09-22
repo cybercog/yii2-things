@@ -218,4 +218,30 @@ class Helper
     {
         \Yii::info(Helper::dumps($mess, false), 'spec');
     }
+
+    /**
+     * Check if in_array all elements from first array in second array
+     */
+    public static function is_subarray(array $arr1,array $arr2){
+
+        $arr2=array_flip($arr2);
+        foreach($arr1 as $item){
+            if(!isset($arr2[$item])){
+                return false;
+            }
+        }
+        return true;
+
+        /*$diff=array_diff($arr1,$arr2);
+        return !empty($diff)?false:true;*/
+    }
+
+    /**
+     * faster in_array implementation ( really it strange)
+     */
+    public static function in_array($val, array $arr){
+        $arr=array_flip($arr);
+        return  isset($arr[$val]);
+     }
+
 }

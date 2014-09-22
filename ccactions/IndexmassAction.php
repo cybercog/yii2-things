@@ -9,7 +9,7 @@
 namespace insolita\things\ccactions;
 
 
-use backend\models\MassActionsModel;
+use insolita\things\models\MassActionsModel;
 use yii\base\Action;
 use Yii;
 use yii\base\InvalidConfigException;
@@ -35,16 +35,13 @@ class IndexmassAction extends Action
     public function run()
     {
         $searchModel = new $this->searchClass;
-        $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams(), $this->controller->_grid_pp);
-        $allowedcols = array_keys($searchModel::getGridedAttributes());
-        $showedcols = (!empty($this->controller->_gridcols) && is_array($this->controller->_gridcols))
-            ? $this->controller->_gridcols : $searchModel::$gridDefaults;
-        foreach ($showedcols as $i => $col) {
-            if (!in_array($col, $allowedcols)) {
-                unset($showedcols[$i]);
-            }
+        $beh=array_keys($this->controller->behaviors());
+        if(in_array('customizer',$beh)){
+            $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams(), $this->controller->grid_pp);
+        }else{
+            $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
         }
-        $this->controller->_gridcols = !empty($showedcols) ? $showedcols : $searchModel::$gridDefaults;
+
         $massactmodel = new MassActionsModel();
         $massactmodel->setActlist($this->massactlist);
         return $this->controller->render(
