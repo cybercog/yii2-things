@@ -39,12 +39,7 @@ class IndexAction extends Action
     public function run()
     {
         $searchModel = new $this->searchClass;
-        $beh=array_keys($this->controller->behaviors());
-        if(in_array('customizer',$beh)){
-            $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams(), $this->controller->grid_pp);
-        }else{
-            $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
-        }
+        $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
 
         return $this->controller->render(
             'index',

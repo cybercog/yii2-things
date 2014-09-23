@@ -16,8 +16,10 @@ use yii\helpers\Html;
 class SActiveRecord extends ActiveRecord
 {
     public static $titledAttribute = 'name';
-    public static $gridDefaults = [];
-    public static $ignoredAttributes = [];
+    public  $gridDefaults = [];
+    public  $ignoredAttributes = [];
+
+    public  $pageSize=20;
 
 
     public function init()
@@ -26,10 +28,10 @@ class SActiveRecord extends ActiveRecord
 
     }
 
-    public static function getGridedAttributes()
+    public function getGridedAttributes()
     {
-        $ignor = static::$ignoredAttributes;
-        $arr = static::attributeLabels();
+        $ignor = $this->ignoredAttributes;
+        $arr = $this->attributeLabels();
         if (!empty($ignor)) {
             foreach ($ignor as $attr) {
                 if (isset($arr[$attr])) {
