@@ -32,7 +32,8 @@ class SystemInfo
     public static function getLinuxOSRelease()
     {
         if (!self::getIsWindows()) {
-            return shell_exec('/usr/bin/lsb_release -ds');
+            $info=self::phpinfo_array();
+            return $info['General']['System '];
         }
     }
 
@@ -42,7 +43,7 @@ class SystemInfo
     public static function getLinuxKernelVersion()
     {
         if (!self::getIsWindows()) {
-            return shell_exec('/bin/uname -r');
+            return '';
         }
     }
 
@@ -394,4 +395,33 @@ class SystemInfo
         }
         return $dirsize;
     }
+
+
+    public  static function phpinfo_array()
+{
+    $info_arr = \Yii::$app->cache->get('sysinfo');
+    if (!$info_arr) {
+        ob_start();
+        phpinfo();
+        $info_arr = array();
+        $info_lines = explode("\n", strip_tags(ob_get_clean(), "<tr><td><h2>"));
+        $cat = "General";
+        foreach ($info_lines as $line) {
+            // new cat?
+            preg_match("~<h2>(.*)</h2>~", $line, $title) ? $cat = $title[1] : null;
+            if (preg_match("~<tr><td[^>]+>([^<]*)</td><td[^>]+>([^<]*)</td></tr>~", $line, $val)) {
+                $sc=trim($val[1]);
+                $info_arr[$cat][$sc] = $val[2];
+            } elseif (preg_match(
+                "~<tr><td[^>]+>([^<]*)</td><td[^>]+>([^<]*)</td><td[^>]+>([^<]*)</td></tr>~", $line, $val
+            )) {
+                $sc=trim($val[1]);
+                $info_arr[$cat][$sc] = array("local" => $val[2], "master" => $val[3]);
+            }
+        }
+        \Yii::$app->cache->set('sysinfo', $info_arr, 86400);
+    }
+
+    return $info_arr;
+}
 } 
