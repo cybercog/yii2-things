@@ -59,7 +59,7 @@ class SActiveRecord extends ActiveRecord
         }
     }
 
-    public function addError($attribute, $error)
+    public function addError($attribute, $error='')
     {
         if (strpos($error, $this->getAttributeLabel($attribute)) === false) {
             $error = '"' . $this->getAttributeLabel($attribute) . '" - ' . $error;
