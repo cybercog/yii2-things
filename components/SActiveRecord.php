@@ -162,4 +162,8 @@ class SActiveRecord extends ActiveRecord
         }
 
     }
+
+    public function search($query){
+        return $query;
+    }
 } 

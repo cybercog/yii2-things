@@ -21,6 +21,7 @@ class Helper
 
     /**
      * Highlighted by default VarDumper::dump
+     *
      * @param      $var
      * @param bool $highlight
      */
@@ -31,6 +32,7 @@ class Helper
 
     /**
      * Highlighted by default VarDumper::dumpAsString
+     *
      * @param      $var
      * @param bool $highlight
      *
@@ -43,6 +45,7 @@ class Helper
 
     /**
      * Font-Awesome icon Helper
+     *
      * @param      $icon
      * @param int  $size
      * @param bool $spin
@@ -62,6 +65,7 @@ class Helper
 
     /**
      * Bootstrap Glyphicon helper
+     *
      * @param $icon
      *
      * @return string
@@ -71,11 +75,22 @@ class Helper
         return '<span class="glyphicon glyphicon-' . $icon . '"></span> ';
     }
 
+    public static function Ion($icon, $size = 'lg')
+    {
+        if (!$size) {
+            return '<i class="icon ion-' . $icon . '"></i> ';
+        } else {
+            return ($size == 'lg') ? '<i class="icon ion-' . $icon . ' fa-lg"></i> '
+                : '<i class="icon ion-' . $icon . ' fa-' . $size . 'x' . '"></i> ';
+        }
+    }
+
     /**
      * customized error summary
+     *
      * @param       $models
      * @param array $options
-     * @param bool  $pure  if true - return errors without any html
+     * @param bool  $pure if true - return errors without any html
      *
      * @return string
      */
@@ -138,6 +153,7 @@ class Helper
 
     /**
      * Random string generator
+     *
      * @param int  $len
      * @param bool $isdigit
      *
@@ -158,6 +174,7 @@ class Helper
 
     /**
      * ucwords for utf-8
+     *
      * @param $str
      *
      * @return string
@@ -190,9 +207,10 @@ class Helper
 
     /**
      * php function stripos for array of string, return true if one of needle in haystack
-     * @param     $haystack
-     * @param mixed(array|string)    $needle
-     * @param int $offset
+     *
+     * @param                     $haystack
+     * @param mixed(array|string) $needle
+     * @param int                 $offset
      *
      * @return bool
      */
@@ -212,6 +230,7 @@ class Helper
 
     /**
      * Quick logs with special category
+     *
      * @param string $mess
      */
     public static function logs($mess)
@@ -222,11 +241,12 @@ class Helper
     /**
      * Check if in_array all elements from first array in second array
      */
-    public static function is_subarray(array $arr1,array $arr2){
+    public static function is_subarray(array $arr1, array $arr2)
+    {
 
-        $arr2=array_flip($arr2);
-        foreach($arr1 as $item){
-            if(!isset($arr2[$item])){
+        $arr2 = array_flip($arr2);
+        foreach ($arr1 as $item) {
+            if (!isset($arr2[$item])) {
                 return false;
             }
         }
@@ -239,9 +259,10 @@ class Helper
     /**
      * faster in_array implementation ( really it strange)
      */
-    public static function in_array($val, array $arr){
-        $arr=array_flip($arr);
-        return  isset($arr[$val]);
-     }
+    public static function in_array($val, array $arr)
+    {
+        $arr = array_flip($arr);
+        return isset($arr[$val]);
+    }
 
 }
