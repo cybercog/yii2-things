@@ -265,4 +265,18 @@ class Helper
         return isset($arr[$val]);
     }
 
+    public static function num_words($string)
+    {
+        preg_match_all("/\S+/", $string, $matches);
+        return count($matches[0]);
+    }
+
+    public static function str2num($str){
+        return preg_replace("/[^0-9]/", '', $str);
+    }
+
+    public static function str2float($str){
+        $str=str_replace(',','.',$str);
+        return ($str+1)-1;
+    }
 }

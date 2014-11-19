@@ -101,6 +101,10 @@ class SActiveRecord extends ActiveRecord
         return !is_array($pks) ? $pks : $pks[0];
     }
 
+    public static function getActiveList($idattr = false, $nameattr = false){
+        return static::getList(false,false,$idattr, $nameattr);
+    }
+
     public static function getList($item = false, $nofilter = true, $idattr = false, $nameattr = false, $exclude = null)
     {
         $idattr = $idattr ? $idattr : static::getPk();

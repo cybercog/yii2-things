@@ -58,7 +58,6 @@ class CreateAction extends Action
                     : $this->controller->render('create', ['model' => $model]);
             }
         } elseif (Yii::$app->request->isAjax) {
-            Yii::$app->response->format = Response::FORMAT_JSON;
             return $this->controller->renderAjax('_form', ['model' => $model]);
         } else {
             return $this->controller->render('create', ['model' => $model]);
