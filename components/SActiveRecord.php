@@ -28,6 +28,10 @@ class SActiveRecord extends ActiveRecord
 
     }
 
+    public  function modelCaption(){
+        return $this->{static::$titledAttribute};
+    }
+
     public function getGridedAttributes()
     {
         $ignor = $this->ignoredAttributes;
