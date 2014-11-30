@@ -8,6 +8,7 @@
 
 namespace insolita\things\components;
 
+use yii\base\ModelEvent;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use yii\caching\DbDependency;
@@ -15,6 +16,9 @@ use yii\helpers\Html;
 
 class SActiveRecord extends ActiveRecord
 {
+    const EVENT_BEFORE_SOFTDEL='beforeSoftdel';
+    const EVENT_AFTER_SOFTDEL='afterSoftdel';
+
     public static $titledAttribute = 'name';
     public  $gridDefaults = [];
     public  $ignoredAttributes = [];
@@ -163,12 +167,27 @@ class SActiveRecord extends ActiveRecord
 
     public function softdelete()
     {
-        if ($this->hasAttribute('bymanager')) {
-            $this->updateAttributes(['active' => 0, 'bymanager' => \Yii::$app->user->id]);
-        } else {
-            $this->updateAttributes(['active' => 0]);
+        if($this->beforeSoftdel()){
+            if ($this->hasAttribute('bymanager')) {
+                $this->updateAttributes(['active' => 0, 'bymanager' => \Yii::$app->user->id]);
+            } else {
+                $this->updateAttributes(['active' => 0]);
+            }
+            $this->afterSoftdel();
         }
 
+    }
+    public function beforeSoftdel()
+    {
+        $event = new ModelEvent();
+        $this->trigger(self::EVENT_BEFORE_SOFTDEL, $event);
+
+        return $event->isValid;
+    }
+
+    public function afterSoftdel()
+    {
+        $this->trigger(self::EVENT_AFTER_SOFTDEL);
     }
 
     public function search($query){

@@ -13,7 +13,7 @@ use yii\db\Expression;
 
 class Scoper extends ActiveQuery
 {
-    public function active($state = true, $alias = false)
+    public function active($state = 1, $alias = false)
     {
         if (!$alias) {
             $this->andWhere(['active' => $state]);
