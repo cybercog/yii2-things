@@ -26,6 +26,8 @@ class CreateAction extends Action
      */
     public $controller;
 
+    public $scenario='create';
+
     public function init()
     {
         if ($this->modelClass === null) {
@@ -44,7 +46,9 @@ class CreateAction extends Action
          * @var \insolita\things\components\SActiveRecord $model
          */
         $model = new $this->modelClass;
-        $model->scenario = 'create';
+        if($this->scenario){
+            $model->scenario = 'create';
+        }
         if (Yii::$app->request->isPost) {
             Yii::$app->response->format = (Yii::$app->request->isAjax) ? Response::FORMAT_JSON : Response::FORMAT_HTML;
             if ($model->load(Yii::$app->request->post()) && $model->save()) {

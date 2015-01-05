@@ -29,6 +29,8 @@ class UpdateAction extends Action
      */
     public $controller;
 
+    public $scenario='update';
+
     public function init()
     {
         if ($this->modelClass === null) {
@@ -47,7 +49,10 @@ class UpdateAction extends Action
          * @var \insolita\things\components\SActiveRecord $model
          */
         $model = $this->findModel($id);
-        $model->scenario = 'update';
+        if($this->scenario){
+            $model->scenario = 'update';
+        }
+
         if (Yii::$app->request->isPost) {
             Yii::$app->response->format =(Yii::$app->request->isAjax)? Response::FORMAT_JSON: Response::FORMAT_HTML;
             if ($model->load(Yii::$app->request->post()) && $model->save()) {

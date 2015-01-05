@@ -14,28 +14,67 @@ use yii\helpers\ArrayHelper;
 use yii\caching\DbDependency;
 use yii\helpers\Html;
 
+/**
+ * Class SActiveRecord
+ *
+ * @package insolita\things\components
+ */
 class SActiveRecord extends ActiveRecord
 {
+    /**
+     *  Событие перед мягким удалением
+     */
     const EVENT_BEFORE_SOFTDEL='beforeSoftdel';
+    /**
+     * Событие после мягкого удаления
+     */
     const EVENT_AFTER_SOFTDEL='afterSoftdel';
 
+
+    /**
+     * Аттрибут используемы как заголовок записи
+     * @var string $titledAttribute
+     */
     public static $titledAttribute = 'name';
+
+    /**
+     * Столбцы для грида по умолчанию
+     * @var array $gridDefaults
+     */
     public  $gridDefaults = [];
+    /**
+     * Игнорируемые гридом аттрибуты
+     * @var array
+     */
     public  $ignoredAttributes = [];
 
+    /**
+     * На страницу по умолчанию
+     * @var int
+     */
     public  $pageSize=20;
 
 
-    public function init()
-    {
+    /**
+     *
+     */
+    public function init(){
         parent::init();
 
     }
 
+    /**
+     * Заголовок модели
+     * @return mixed
+     */
     public  function modelCaption(){
         return $this->{static::$titledAttribute};
     }
 
+    /**
+     * Список колонок для грида с учетом игнорируемых
+     * @return array
+     */
     public function getGridedAttributes()
     {
         $ignor = $this->ignoredAttributes;
@@ -50,11 +89,19 @@ class SActiveRecord extends ActiveRecord
         return $arr;
     }
 
+    /**
+     * Таблицы для которых есть главенствующий элемент который должен быть первым во всех списках
+     * @return bool
+     */
     public static function hasMain()
     {
         return in_array(static::tableName(), ['{{%city}}', '{{%sklad}}', '{{%doctype}}']);
     }
 
+    /**
+     * Возвращает значение главенствующего элемента
+     * @return mixed
+     */
     public static function getMain()
     {
         if (static::hasMain()) {
@@ -67,6 +114,11 @@ class SActiveRecord extends ActiveRecord
         }
     }
 
+    /**
+     * Переопределение для дополнения в вывод ошибки названия аттрибута
+     * @param string $attribute
+     * @param string $error
+     */
     public function addError($attribute, $error='')
     {
         if (strpos($error, $this->getAttributeLabel($attribute)) === false) {
@@ -75,11 +127,18 @@ class SActiveRecord extends ActiveRecord
         parent::addError($attribute, $error);
     }
 
+    /**
+     *
+     */
     public function afterValidate()
     {
         parent::afterValidate();
     }
 
+    /**
+     * Выводит простой список ошибок без Html-разметки
+     * @return string
+     */
     public function formattedErrors()
     {
         $errs = [];
@@ -98,21 +157,42 @@ class SActiveRecord extends ActiveRecord
         return new Scoper(get_called_class());
     }
 
+    /**
+     * @return $this
+     */
     public static function active()
     {
         return static::find()->active();
     }
 
+    /**
+     * @return \string[]
+     */
     public static function getPk()
     {
         $pks = static::primaryKey();
         return !is_array($pks) ? $pks : $pks[0];
     }
 
+    /**
+     * @param bool $idattr
+     * @param bool $nameattr
+     *
+     * @return array|mixed
+     */
     public static function getActiveList($idattr = false, $nameattr = false){
         return static::getList(false,false,$idattr, $nameattr);
     }
 
+    /**
+     * @param bool $item
+     * @param bool $nofilter
+     * @param bool $idattr
+     * @param bool $nameattr
+     * @param null $exclude
+     *
+     * @return array|mixed
+     */
     public static function getList($item = false, $nofilter = true, $idattr = false, $nameattr = false, $exclude = null)
     {
         $idattr = $idattr ? $idattr : static::getPk();
@@ -154,6 +234,11 @@ class SActiveRecord extends ActiveRecord
     }
 
 
+    /**
+     * @param bool $insert
+     *
+     * @return bool
+     */
     public function beforeSave($insert)
     {
         if ($this->hasAttribute('bymanager')) {
@@ -165,6 +250,9 @@ class SActiveRecord extends ActiveRecord
         return parent::beforeSave($insert);
     }
 
+    /**
+     * Мягкое удаление
+     */
     public function softdelete()
     {
         if($this->beforeSoftdel()){
@@ -177,6 +265,10 @@ class SActiveRecord extends ActiveRecord
         }
 
     }
+
+    /**
+     * @return bool
+     */
     public function beforeSoftdel()
     {
         $event = new ModelEvent();
@@ -185,11 +277,19 @@ class SActiveRecord extends ActiveRecord
         return $event->isValid;
     }
 
+    /**
+     *
+     */
     public function afterSoftdel()
     {
         $this->trigger(self::EVENT_AFTER_SOFTDEL);
     }
 
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
     public function search($query){
         return $query;
     }

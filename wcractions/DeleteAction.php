@@ -24,6 +24,8 @@ class DeleteAction extends Action{
      */
     public $controller;
 
+    public $scenario=null;
+
     public function init()
     {
         if ($this->modelClass === null) {
@@ -38,7 +40,11 @@ class DeleteAction extends Action{
      */
     public function run($id)
     {
-        $this->findModel($id)->softdelete();
+        $model=$this->findModel($id);
+        if($this->scenario){
+            $model->scenario=$this->scenario;
+        }
+        $model->softdelete();
 
         return $this->controller->redirect(['index']);
     }
