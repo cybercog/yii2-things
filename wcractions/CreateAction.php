@@ -47,7 +47,7 @@ class CreateAction extends Action
          */
         $model = new $this->modelClass;
         if($this->scenario){
-            $model->scenario = 'create';
+            $model->scenario = $this->scenario;
         }
         if (Yii::$app->request->isPost) {
             Yii::$app->response->format = (Yii::$app->request->isAjax) ? Response::FORMAT_JSON : Response::FORMAT_HTML;

@@ -50,7 +50,7 @@ class UpdateAction extends Action
          */
         $model = $this->findModel($id);
         if($this->scenario){
-            $model->scenario = 'update';
+            $model->scenario = $this->scenario;
         }
 
         if (Yii::$app->request->isPost) {
