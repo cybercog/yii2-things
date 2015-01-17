@@ -38,8 +38,6 @@ class MetaModelBeh extends Behavior
         if (empty($this->source_attributes) || !is_array($this->source_attributes)) {
             throw new \UnexpectedValueException('Неверно указаны аттрибуты источника');
         }
-
-
         foreach ($this->source_attributes as $sattr) {
             if (!empty($this->owner->$sattr)) {
                 if ($this->owner->isNewRecord or $this->owner->$sattr != $this->owner->getOldAttribute($sattr)) {
@@ -62,64 +60,29 @@ class MetaModelBeh extends Behavior
 
     }
 
+    private function cleaner($data){
+        $search = array(
+            "'<script[^>]*?>.*?</script>'si","'<[\/\!]*?[^<>]*?>'si","'([\r\n])[\s]+'", 
+            "'&quot;'i", "'&amp;'i","'&lt;'i","'&gt;'i","'&nbsp;'i","','i","'\.'i","';'i","':'i",
+            "'\"'i","'\''i","'&#(\d+);'ue"
+        );
+        $replace = array(
+            "","","\\1"," "," "," "," "," "," "," "," ", " "," "," ","chr(\\1)"
+        );
+        $dataz = preg_replace($search, $replace, $data);
+        $search = [
+            "'$'si","'\?'si","'\!'si","'%'si","'#'si","'&'si","'№'si","'\*'si","'\('si",
+            "'\)'si","'\{'si","'\}'si","'\['si","'\]'si","'\^'si",
+        ];
+        $replace = [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "];
+        $dataz = preg_replace($search, $replace, $dataz);
+        return $dataz;
+    }
     private function generateMetaKey()
     {
         $p = new HtmlPurifier();
         $data = $p->process($this->_data);
-        $search = array(
-            "'<script[^>]*?>.*?</script>'si", // Вырезает javaScript
-            "'<[\/\!]*?[^<>]*?>'si", // Вырезает HTML-теги
-            "'([\r\n])[\s]+'", // Вырезает пробельные символы
-            "'&quot;'i", // Заменяет HTML-сущности
-            "'&amp;'i",
-            "'&lt;'i",
-            "'&gt;'i",
-            "'&nbsp;'i",
-            "','i",
-            "'\.'i",
-            "';'i",
-            "':'i",
-            "'\"'i",
-            "'\''i",
-            "'&#(\d+);'ue"
-        ); // интерпретировать как php-код
-        $replace = array(
-            "",
-            "",
-            "\\1",
-            " ",
-            " ",
-            " ",
-            " ",
-            " ",
-            " ",
-            " ",
-            " ",
-            " ",
-            " ",
-            " ",
-            "chr(\\1)"
-        );
-        $dataz = preg_replace($search, $replace, $data);
-        $search = [
-            "'$'si",
-            "'\?'si",
-            "'\!'si",
-            "'%'si",
-            "'#'si",
-            "'&'si",
-            "'№'si",
-            "'\*'si",
-            "'\('si",
-            "'\)'si",
-            "'\{'si",
-            "'\}'si",
-            "'\['si",
-            "'\]'si",
-            "'\^'si",
-        ];
-        $replace = [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "];
-        $dataz = preg_replace($search, $replace, $dataz);
+        $dataz=$this->cleaner($data);
         if ($dataz) {
             $narr = $this->remStopwords($dataz);
             if (count($narr)) {
@@ -144,60 +107,7 @@ class MetaModelBeh extends Behavior
         $data = $p->process($this->_data);
         $data = str_replace('?', " ", $data);
         $data = str_replace('!', " ", $data);
-        $search = array(
-            "'<script[^>]*?>.*?</script>'si", // Вырезает javaScript
-            "'<[\/\!]*?[^<>]*?>'si", // Вырезает HTML-теги
-            "'([\r\n])[\s]+'", // Вырезает пробельные символы
-            "'&quot;'i", // Заменяет HTML-сущности
-            "'&amp;'i",
-            "'&lt;'i",
-            "'&gt;'i",
-            "'&nbsp;'i",
-            "','i",
-            "'\.'i",
-            "';'i",
-            "':'i",
-            "'\"'i",
-            "'\''i",
-            "'&#(\d+);'ue"
-        ); // интерпретировать как php-код
-        $replace = array(
-            "",
-            "",
-            "\\1",
-            " ",
-            " ",
-            " ",
-            " ",
-            " ",
-            " ",
-            " ",
-            " ",
-            " ",
-            " ",
-            " ",
-            "chr(\\1)"
-        );
-        $dataz = preg_replace($search, $replace, $data);
-        $search = [
-            "'$'si",
-            "'\?'si",
-            "'\!'si",
-            "'%'si",
-            "'#'si",
-            "'&'si",
-            "'№'si",
-            "'\*'si",
-            "'\('si",
-            "'\)'si",
-            "'\{'si",
-            "'\}'si",
-            "'\['si",
-            "'\]'si",
-            "'\^'si",
-        ];
-        $replace = [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "];
-        $dataz = preg_replace($search, $replace, $dataz);
+        $dataz=$this->cleaner($data);
         if ($dataz) {
             $res = mb_substr($dataz, 0, 255, 'UTF-8');
             return $res;
