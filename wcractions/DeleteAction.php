@@ -10,6 +10,7 @@ namespace insolita\things\wcractions;
 use yii\base\Action;
 use Yii;
 use yii\base\InvalidConfigException;
+use yii\helpers\Html;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
@@ -44,7 +45,9 @@ class DeleteAction extends Action{
         if($this->scenario){
             $model->scenario=$this->scenario;
         }
-        $model->softdelete();
+        if(!$model->softdelete()){
+            Yii::$app->session->setFlash('error', Html::errorSummary($model));
+        }
 
         return $this->controller->redirect(['index']);
     }

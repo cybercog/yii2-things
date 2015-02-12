@@ -8,6 +8,7 @@
 
 namespace insolita\things\components;
 
+use common\Scoper;
 use yii\base\ModelEvent;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
