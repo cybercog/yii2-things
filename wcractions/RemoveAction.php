@@ -10,6 +10,7 @@ namespace insolita\things\wcractions;
 use yii\base\Action;
 use Yii;
 use yii\base\InvalidConfigException;
+use yii\helpers\Html;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
@@ -38,7 +39,10 @@ class RemoveAction extends Action{
      */
     public function run($id)
     {
-        $this->findModel($id)->delete();
+        $model=$this->findModel($id);
+        if(!$model->delete()){
+            Yii::$app->session->setFlash('error', Html::errorSummary($model));
+        }
 
         return $this->controller->redirect(['index']);
     }
